@@ -2,10 +2,6 @@
 
 
 
-Hi, I'm \*\*Habibur Rahman\*\*.
-
-
-
 This portfolio showcases hands-on Azure projects focused on identity management, security, networking, infrastructure, and cloud administration. Each project is built in a live Azure environment and documents the technologies used, implementation steps, and key outcomes.
 
 
@@ -115,8 +111,4 @@ A practical demonstration of Azure Role-Based Access Control (RBAC) using Micros
 \- Security Groups
 
 \- Least Privilege Access
-
-
-
-
 
