@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Azure RBAC with Microsoft Entra ID Security Groups
 
 > A hands-on Azure lab where I explored how Azure Role-Based Access Control (RBAC) works in practice by assigning permissions through Microsoft Entra ID security groups, validating access, and testing access removal.
