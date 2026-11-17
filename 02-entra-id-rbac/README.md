@@ -23,8 +23,6 @@
 - [Challenges During the Lab](#-challenges-during-the-lab)
 - [Key Takeaways](#-key-takeaways)
 - [Skills Practiced](#-skills-practiced)
-- [Next Steps](#-next-steps)
-- [Author](#-author)
 
 ---
 
