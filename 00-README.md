@@ -2,16 +2,6 @@
 
 
 
-\[Badges]
-
-
-
-\## 👋 Welcome
-
-
-
-Hi, I'm Habibur Rahman.
-
 
 
 As a Service Desk Analyst with a growing focus on cloud engineering, I'm building hands-on experience across Microsoft Azure, identity management, networking, security, monitoring, and infrastructure automation.
