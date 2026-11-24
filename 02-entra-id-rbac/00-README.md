@@ -4,7 +4,7 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
 - [Why I Built This Lab](#-why-i-built-this-lab)
 - [What I Wanted to Learn](#-what-i-wanted-to-learn)
@@ -26,7 +26,7 @@
 
 ---
 
-# 📖 Why I Built This Lab
+# Why I Built This Lab
 
 While studying Azure administration and preparing for the AZ-104 certification, I wanted to move beyond reading documentation and actually see how Azure RBAC behaves in a practical environment.
 
@@ -40,7 +40,7 @@ This lab helped me better understand how Azure administrators manage permissions
 
 ---
 
-# 🎯 What I Wanted to Learn
+# What I Wanted to Learn
 
 - How Azure RBAC works in practice
 - How Microsoft Entra ID security groups are used for authorization
@@ -51,7 +51,7 @@ This lab helped me better understand how Azure administrators manage permissions
 
 ---
 
-# 🛠 Lab Environment
+# Lab Environment
 
 | Component | Configuration |
 |------------|------------|
@@ -65,7 +65,7 @@ This lab helped me better understand how Azure administrators manage permissions
 
 ---
 
-# 🏗 Architecture
+# Architecture
 
 The environment was intentionally kept simple so I could focus on understanding RBAC permission inheritance.
 
@@ -91,7 +91,7 @@ This is the same approach commonly used in production environments because it is
 
 ---
 
-# 🚀 Implementation
+# Implementation
 
 ## Step 1 - Create a Guest User
 
@@ -278,7 +278,7 @@ Although these were small issues, they helped me understand how Azure permission
 
 ---
 
-# 💡 Key Takeaways
+# Key Takeaways
 
 This lab gave me a much better understanding of Azure access management than simply reading documentation.
 
@@ -294,7 +294,7 @@ Most importantly, I was able to see the full lifecycle of Azure access managemen
 
 ---
 
-# 🧠 Skills Practiced
+# Skills Practiced
 
 ### Azure
 
