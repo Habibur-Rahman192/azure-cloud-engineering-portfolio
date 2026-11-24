@@ -1,1000 +1,628 @@
-# \# AZ\\-104 Lab 03: Azure Governance, Policy and Resource Management
+\# AZ-104 Lab 03: Azure Governance, Policy and Resource Management
 
-# 
 
-# \## Overview
 
-# 
+\## Overview
 
-# In this lab, I focused on Azure governance and resource management by working with Azure Policy, Resource Locks, Management Groups, RBAC inheritance, and resource relocation.
 
-# 
 
-# Rather than simply creating resources, I wanted to understand how Azure administrators enforce standards, protect resources, and manage compliance across an Azure environment. This lab gave me practical experience with some of the governance and control mechanisms that are commonly used in enterprise Azure deployments.
+In this lab, I focused on Azure governance and resource management by implementing Azure Policy, Resource Locks, Management Groups, RBAC inheritance, and resource relocation.
 
-# 
 
-# \---
 
-# 
+Rather than simply deploying resources, I wanted to understand how Azure administrators enforce standards, protect critical infrastructure, and maintain compliance across an Azure environment. This lab gave me hands-on experience with several governance capabilities that are commonly used in enterprise Azure deployments.
 
-# \# Why I Built This Lab
 
-# 
 
-# As I continue working towards the AZ\\-104 certification, I wanted to move beyond deploying resources and focus on governance.
+\---
 
-# 
 
-# Most production Azure environments require controls to ensure that resources are deployed correctly, tagged appropriately, protected from accidental deletion, and managed consistently across subscriptions.
 
-# 
+\## Table of Contents
 
-# The goal of this lab was to explore how Azure provides governance at scale and to understand how administrators can implement policies that support operational, security, and compliance requirements.
 
-# 
 
-# \---
+\- \[Why I Built This Lab](#why-i-built-this-lab)
 
-# 
+\- \[Business Scenario](#business-scenario)
 
-# \# Business Scenario
+\- \[What I Wanted to Learn](#what-i-wanted-to-learn)
 
-# 
+\- \[Lab Environment](#lab-environment)
 
-# An organisation wants to standardise Azure resource management across multiple teams and subscriptions.
+\- \[Implementation](#implementation)
 
-# 
+&#x20; - \[Step 1 - Configure the Allowed Locations Policy](#step-1---configure-the-allowed-locations-policy)
 
-# To achieve this, administrators need to:
+&#x20; - \[Step 2 - Validate Policy Enforcement](#step-2---validate-policy-enforcement)
 
-# 
+&#x20; - \[Step 3 - Configure a Required Resource Tag Policy](#step-3---configure-a-required-resource-tag-policy)
 
-# \- Restrict deployments to approved Azure regions
+&#x20; - \[Step 4 - Create a Custom Audit Policy](#step-4---create-a-custom-audit-policy)
 
-# \- Enforce mandatory resource tags
+&#x20; - \[Step 5 - Review Policy Compliance](#step-5---review-policy-compliance)
 
-# \- Automatically remediate non\\-compliant resources
+&#x20; - \[Step 6 - Configure Automatic Tag Remediation](#step-6---configure-automatic-tag-remediation)
 
-# \- Protect critical infrastructure from accidental deletion
+&#x20; - \[Step 7 - Validate Policy Remediation](#step-7---validate-policy-remediation)
 
-# \- Organise subscriptions through Management Groups
+&#x20; - \[Step 8 - Protect Resources Using Resource Locks](#step-8---protect-resources-using-resource-locks)
 
-# \- Control permissions through RBAC inheritance
+&#x20; - \[Step 9 - Validate Resource Lock Enforcement](#step-9---validate-resource-lock-enforcement)
 
-# \- Maintain visibility of compliance across the environment
+&#x20; - \[Step 10 - Create and Configure a Management Group](#step-10---create-and-configure-a-management-group)
 
-# 
+&#x20; - \[Step 11 - Review RBAC Inheritance](#step-11---review-rbac-inheritance)
 
-# Azure Policy, Resource Locks, Management Groups, and RBAC provide the building blocks required to implement these controls.
+&#x20; - \[Step 12 - Move Resources Between Resource Groups](#step-12---move-resources-between-resource-groups)
 
-# 
+\- \[Validation and Testing](#validation-and-testing)
 
-# \---
+\- \[Challenges During the Lab](#challenges-during-the-lab)
 
-# 
+\- \[Key Takeaways](#key-takeaways)
 
-# \# What I Wanted to Learn
+\- \[Skills Practised](#skills-practised)
 
-# 
+\- \[AZ-104 Skills Mapping](#az-104-skills-mapping)
 
-# \- How Azure Policy prevents non\\-compliant deployments
 
-# \- How resource tagging can be enforced through governance controls
 
-# \- How policy compliance is monitored and reported
+\---
 
-# \- How remediation tasks work using Managed Identities
 
-# \- How Resource Locks protect Azure resources
 
-# \- How Management Groups support governance across subscriptions
+\## Why I Built This Lab
 
-# \- How RBAC permissions inherit across scopes
 
-# \- How Azure resources can be moved between Resource Groups
 
-# 
+As I continue preparing for the AZ-104 certification, I wanted to move beyond resource deployment and focus on governance.
 
-# \---
 
-# 
 
-# \# Lab Environment
+In real-world Azure environments, administrators need to ensure resources are deployed in approved regions, tagged correctly, protected from accidental deletion, and governed consistently across multiple subscriptions.
 
-# 
 
-# | Component | Configuration |
 
-# | --- | --- |
+This lab allowed me to explore how Azure governance features work together to help organisations maintain compliance and reduce operational risk.
 
-# | Azure Platform | Microsoft Azure |
 
-# | Administration Tools | Azure Portal, Azure PowerShell |
 
-# | Governance Services | Azure Policy |
+\---
 
-# | Access Management | Azure RBAC |
 
-# | Resource Protection | Resource Locks |
 
-# | Organisation Layer | Management Groups |
+\## Business Scenario
 
-# | Test Resources | Virtual Network, Network Security Group |
 
-# | Region | UK South |
 
-# 
+An organisation wants to standardise Azure resource management across multiple teams and subscriptions.
 
-# \---
 
-# 
 
-# \# Implementation
+To achieve this, administrators need to:
 
-# 
 
-# \## Step 1 \\- Configure the Allowed Locations Policy
 
-# 
+\- Restrict deployments to approved Azure regions
 
-# \### Objective
+\- Enforce resource tagging standards
 
-# 
+\- Automatically remediate non-compliant resources
 
-# I wanted to restrict Azure resource deployments to approved regions.
+\- Protect critical infrastructure from accidental deletion
 
-# 
+\- Organise subscriptions through Management Groups
 
-# \### Configuration
+\- Control permissions through RBAC inheritance
 
-# 
+\- Maintain visibility of compliance across the environment
 
-# I assigned the built\\-in \*\*Allowed Locations\*\* policy to the Resource Group scope and configured the policy to allow deployments only within the approved Azure region.
 
-# 
 
-# \### Evidence
+Azure Policy, Resource Locks, Management Groups, and RBAC provide the governance framework needed to support these requirements.
 
-# 
 
-# !\[Figure 4 - Azure Policy Assignment - Allowed Locations](InvalidUrl)
 
-# 
+\---
 
-# !\[Figure 6 - Allowed Locations Policy Configuration](InvalidUrl)
 
-# 
 
-# \### Validation
+\## What I Wanted to Learn
 
-# 
 
-# I reviewed the policy assignment and confirmed that the correct location restrictions were configured.
 
-# 
+\- How Azure Policy prevents non-compliant deployments
 
-# \### Result
+\- How governance controls enforce tagging standards
 
-# 
+\- How policy compliance is monitored and reported
 
-# The policy became active and prevented deployments outside the approved region.
+\- How remediation tasks work using Managed Identities
 
-# 
+\- How Resource Locks protect Azure resources
 
-# \### What I Learned
+\- How Management Groups support governance at scale
 
-# 
+\- How RBAC permissions inherit across scopes
 
-# Azure Policy can be used to proactively enforce governance standards before resources are deployed.
+\- How Azure resources can be moved between Resource Groups
 
-# 
 
-# \---
 
-# 
+\---
 
-# \## Step 2 \\- Validate Policy Enforcement
 
-# 
 
-# \### Objective
+\## Lab Environment
 
-# 
 
-# Confirm that the Allowed Locations policy was actively enforcing restrictions.
 
-# 
+| Component | Configuration |
 
-# \### Configuration
+|------------|------------|
 
-# 
+| Azure Platform | Microsoft Azure |
 
-# I attempted to deploy a Storage Account in a region that was not permitted by the policy.
+| Administration Tools | Azure Portal, Azure PowerShell |
 
-# 
+| Governance Services | Azure Policy |
 
-# \### Evidence
+| Access Management | Azure RBAC |
 
-# 
+| Resource Protection | Resource Locks |
 
-# !\[Figure 5 - Azure Policy Enforcement - Storage Account Deployment Blocked](InvalidUrl)
+| Organisation Layer | Management Groups |
 
-# 
+| Test Resources | Virtual Network, Network Security Group |
 
-# \### Validation
+| Region | UK South |
 
-# 
 
-# Azure evaluated the deployment request against the assigned policy.
 
-# 
+\---
 
-# \### Result
 
-# 
 
-# The deployment was blocked because it violated the policy configuration.
+\# Implementation
 
-# 
 
-# \### What I Learned
 
-# 
+\## Step 1 - Configure the Allowed Locations Policy
 
-# Policy enforcement occurs before deployment completes, reducing the risk of non\\-compliant resources being created.
 
-# 
 
-# \---
+\### Objective
 
-# 
 
-# \## Step 3 \\- Configure a Required Resource Tag Policy
 
-# 
+Restrict deployments to approved Azure regions.
 
-# \### Objective
 
-# 
 
-# Enforce organisational tagging standards.
+\### Configuration
 
-# 
 
-# \### Configuration
 
-# 
+I assigned the built-in \*\*Allowed Locations\*\* policy and configured it to allow deployments only within approved regions.
 
-# I reviewed and assigned a policy requiring resources to contain specific tags.
 
-# 
 
-# \### Evidence
+\### Evidence
 
-# 
 
-# !\[Figure 7 - Azure Policy Definition – Require a Tag and Its Value on Resources](InvalidUrl)
 
-# 
+!\[Figure 4 - Azure Policy Assignment - Allowed Locations](Azure%20Policy%20Assignment%20-%20Allowed%20Locations.png)
 
-# \### Validation
 
-# 
 
-# I reviewed the policy definition and assignment settings.
+!\[Figure 6 - Allowed Locations Policy Configuration](Allowed%20Locations%20Policy%20Configuration.png)
 
-# 
 
-# \### Result
 
-# 
+\### Result
 
-# Resources could be assessed against the policy to determine tag compliance.
 
-# 
 
-# \### What I Learned
+The policy was assigned successfully and became active.
 
-# 
 
-# Resource tags play an important role in governance, reporting, automation, and operational management.
 
-# 
+\### What I Learned
 
-# \---
 
-# 
 
-# \## Step 4 \\- Create a Custom Audit Policy
+Azure Policy can enforce governance before resources are deployed.
 
-# 
 
-# \### Objective
 
-# 
+\---
 
-# Audit resources missing required tags.
 
-# 
 
-# \### Configuration
+\## Step 2 - Validate Policy Enforcement
 
-# 
 
-# I created a custom Azure Policy definition with an Audit effect.
 
-# 
+\### Objective
 
-# \### Evidence
 
-# 
 
-# !\[Figure 8 - Custom Azure Policy Definition for Resource Tag Auditing](InvalidUrl)
+Confirm that the policy actively blocks unauthorised deployments.
 
-# 
 
-# \### Validation
 
-# 
+\### Evidence
 
-# The policy evaluated resources against the tagging requirement.
 
-# 
 
-# \### Result
+!\[Figure 5 - Azure Policy Enforcement - Storage Account Deployment Blocked](Azure%20Policy%20Enforcement%20-%20Storage%20Account%20Deployment%20Blocked.png)
 
-# 
 
-# Azure identified resources that did not meet the required tagging standard.
 
-# 
+\### Validation
 
-# \### What I Learned
 
-# 
 
-# Audit policies provide visibility into compliance without preventing deployments.
+I attempted to create a Storage Account in a blocked region.
 
-# 
 
-# \---
 
-# 
+\### Result
 
-# \## Step 5 \\- Review Policy Compliance
 
-# 
 
-# \### Objective
+Azure denied the deployment due to the policy assignment.
 
-# 
 
-# Understand how Azure reports policy compliance.
 
-# 
+\### What I Learned
 
-# \### Configuration
 
-# 
 
-# I reviewed the Azure Policy Compliance dashboard and compliance reports.
+Preventative controls are often more effective than identifying issues after deployment.
 
-# 
 
-# \### Evidence
 
-# 
+\---
 
-# !\[Figure 9 - Azure Policy Compliance Dashboard](InvalidUrl)
 
-# 
 
-# !\[Figure 10 - Policy Compliance Details for Resources Missing Required Environment Tags](InvalidUrl)
+\## Step 3 - Configure a Required Resource Tag Policy
 
-# 
 
-# \### Validation
 
-# 
+!\[Figure 7 - Azure Policy Definition – Require a Tag and Its Value on Resources](Azure%20Policy%20Definition%20%E2%80%93%20Require%20a%20Tag%20and%20Its%20Value%20on%20Resources.png)
 
-# I reviewed compliance states and investigated non\\-compliant resources.
 
-# 
 
-# \### Result
+\### What I Learned
 
-# 
 
-# Azure clearly identified policy violations and highlighted resources requiring remediation.
 
-# 
+Tags are important for governance, reporting, automation, and cost allocation.
 
-# \### What I Learned
 
-# 
 
-# Compliance reporting provides administrators with a central view of governance issues.
+\---
 
-# 
 
-# \---
 
-# 
+\## Step 4 - Create a Custom Audit Policy
 
-# \## Step 6 \\- Configure Automatic Tag Remediation
 
-# 
 
-# \### Objective
+!\[Figure 8 - Custom Azure Policy Definition for Resource Tag Auditing](Custom%20Azure%20Policy%20Definition%20for%20Resource%20Tag%20Auditing.png)
 
-# 
 
-# Automatically apply tags to resources missing required values.
 
-# 
+\### What I Learned
 
-# \### Configuration
 
-# 
 
-# I assigned a policy that inherited tags from the Resource Group and configured a Managed Identity to perform remediation.
+Audit policies identify compliance issues without preventing deployments.
 
-# 
 
-# \### Evidence
 
-# 
+\---
 
-# !\[Figure 16 - Azure Policy Assignment with Managed Identity for Automatic Tag Inheritance](InvalidUrl)
 
-# 
 
-# \### Validation
+\## Step 5 - Review Policy Compliance
 
-# 
 
-# The policy assignment and remediation identity were successfully configured.
 
-# 
+!\[Figure 9 - Azure Policy Compliance Dashboard](Azure%20Policy%20Compliance%20Dashboard%20Showing%20Policy%20Enforcement%20Results.png)
 
-# \### Result
 
-# 
 
-# The environment was prepared to automatically remediate resources missing required tags.
+!\[Figure 10 - Policy Compliance Details for Resources Missing Required Environment Tags](Policy%20Compliance%20Details%20for%20Resources%20Missing%20Required%20Environment%20Tags.png)
 
-# 
 
-# \### What I Learned
 
-# 
+\### What I Learned
 
-# Managed Identities allow Azure Policy to perform remediation tasks securely without requiring stored credentials.
 
-# 
 
-# \---
+Compliance reports provide visibility into governance issues across Azure resources.
 
-# 
 
-# \## Step 7 \\- Validate Policy Remediation
 
-# 
+\---
 
-# \### Objective
 
-# 
 
-# Confirm that remediation resolved compliance issues.
+\## Step 6 - Configure Automatic Tag Remediation
 
-# 
 
-# \### Configuration
 
-# 
+!\[Figure 16 - Azure Policy Assignment with Managed Identity for Automatic Tag Inheritance](Azure%20Policy%20Assignment%20with%20Managed%20Identity%20for%20Automatic%20Tag%20Inheritance.png)
 
-# I reviewed the compliance results after remediation was completed.
 
-# 
 
-# \### Evidence
+\### What I Learned
 
-# 
 
-# !\[Figure 20 - Azure Policy Compliance After Automatic Tag Inheritance Remediation](InvalidUrl)
 
-# 
+Managed Identities enable Azure Policy to remediate resources securely.
 
-# \### Validation
 
-# 
 
-# I checked the compliance dashboard after the remediation process completed.
+\---
 
-# 
 
-# \### Result
 
-# 
+\## Step 7 - Validate Policy Remediation
 
-# Compliance increased to 100% for the evaluated resources.
 
-# 
 
-# \### What I Learned
+!\[Figure 20 - Azure Policy Compliance After Automatic Tag Inheritance Remediation](Azure%20Policy%20Compliance%20After%20Automatic%20Tag%20Inheritance%20Remediation.png)
 
-# 
 
-# Azure Policy remediation can automatically bring resources back into compliance without manual intervention.
 
-# 
+\### Result
 
-# \---
 
-# 
 
-# \## Step 8 \\- Protect Resources Using Resource Locks
+Compliance improved to 100% for the evaluated resources.
 
-# 
 
-# \### Objective
 
-# 
+\---
 
-# Prevent accidental deletion of critical resources.
 
-# 
 
-# \### Configuration
+\## Step 8 - Protect Resources Using Resource Locks
 
-# 
 
-# I applied a \*\*CanNotDelete\*\* Resource Lock to a Virtual Network.
 
-# 
+!\[Figure 11 - CanNotDelete Resource Lock Applied to Azure Virtual Network](CanNotDelete%20Resource%20Lock%20Applied%20to%20Azure%20Virtual%20Network.png)
 
-# \### Evidence
 
-# 
 
-# !\[Figure 11 - CanNotDelete Resource Lock Applied to Azure Virtual Network](InvalidUrl)
+!\[Figure 19 - Creating a CanNotDelete Resource Lock Using Azure PowerShell](Creating%20a%20CanNotDelete%20Resource%20Lock%20Using%20Azure%20PowerShell.png)
 
-# 
 
-# !\[Figure 19 - Creating a CanNotDelete Resource Lock Using Azure PowerShell](InvalidUrl)
 
-# 
+\### What I Learned
 
-# \### Validation
 
-# 
 
-# The lock assignment was reviewed in the Azure Portal and through PowerShell.
+Resource Locks provide protection even when users have permission to manage resources.
 
-# 
 
-# \### Result
 
-# 
+\---
 
-# The Virtual Network became protected from accidental deletion.
 
-# 
 
-# \### What I Learned
+\## Step 9 - Validate Resource Lock Enforcement
 
-# 
 
-# Resource Locks provide an additional layer of protection beyond RBAC permissions.
 
-# 
+!\[Figure 12 - Resource Deletion Blocked by CanNotDelete Resource Lock](Resource%20Deletion%20Blocked%20by%20CanNotDelete%20Resource%20Lock.png)
 
-# \---
 
-# 
 
-# \## Step 9 \\- Validate Resource Lock Enforcement
+\### Result
 
-# 
 
-# \### Objective
 
-# 
+The deletion operation was successfully blocked.
 
-# Verify that the lock was functioning correctly.
 
-# 
 
-# \### Configuration
+\---
 
-# 
 
-# I attempted to delete the protected resource.
 
-# 
+\## Step 10 - Create and Configure a Management Group
 
-# \### Evidence
 
-# 
 
-# !\[Figure 12 - Resource Deletion Blocked by CanNotDelete Resource Lock](InvalidUrl)
+!\[Figure 13 - Azure Management Group Hierarchy and Subscription Organization](Azure%20Management%20Group%20Hierarchy%20and%20Subscription%20Organization.png)
 
-# 
 
-# \### Validation
 
-# 
+!\[Figure 14 - Azure Subscription Assigned to the mg-az104-lab Management Group](Azure%20Subscription%20Assigned%20to%20the%20mg-az104-lab%20Management%20Group.png)
 
-# Azure evaluated the deletion request against the applied lock.
 
-# 
 
-# \### Result
+\### What I Learned
 
-# 
 
-# The deletion was blocked successfully.
 
-# 
+Management Groups simplify governance and policy inheritance across subscriptions.
 
-# \### What I Learned
 
-# 
 
-# Resource Locks are highly effective at preventing accidental deletion of critical infrastructure.
+\---
 
-# 
 
-# \---
 
-# 
+\## Step 11 - Review RBAC Inheritance
 
-# \## Step 10 \\- Create and Configure a Management Group
 
-# 
 
-# \### Objective
+!\[Figure 15 - RBAC Owner Role Assignment and Management Group Inheritance](Screenshot%202026-11-22%20100503.png)
 
-# 
 
-# Organise subscriptions using Azure governance hierarchy.
 
-# 
+\### What I Learned
 
-# \### Configuration
 
-# 
 
-# I created a Management Group and moved the Azure subscription into it.
+Permissions assigned at higher scopes can be inherited by child resources.
 
-# 
 
-# \### Evidence
 
-# 
+\---
 
-# !\[Figure 13 - Azure Management Group Hierarchy and Subscription Organization](InvalidUrl)
 
-# 
 
-# !\[Figure 14 - Azure Subscription Assigned to the Management Group](InvalidUrl)
+\## Step 12 - Move Resources Between Resource Groups
 
-# 
 
-# \### Validation
 
-# 
+!\[Figure 18 - Azure Resource Move Review](Azure%20Resource%20Move%20Review%20Showing%20Source%20and%20Target%20Resource%20Groups.png)
 
-# I reviewed the Management Group structure and subscription placement.
 
-# 
 
-# \### Result
+!\[Figure 17 - Network Security Group Successfully Moved](Network%20Security%20Group%20Successfully%20Moved%20to%20the%20Target%20Resource%20Group.png)
 
-# 
 
-# The subscription was successfully managed within the governance hierarchy.
 
-# 
+\### What I Learned
 
-# \### What I Learned
 
-# 
 
-# Management Groups provide a scalable way to organise subscriptions and apply governance controls consistently.
+Azure Resource Manager supports resource movement when dependencies and resource types allow it.
 
-# 
 
-# \---
 
-# 
+\---
 
-# \## Step 11 \\- Review RBAC Inheritance
 
-# 
 
-# \### Objective
+\## Validation and Testing
 
-# 
 
-# Understand how permissions inherit from Management Groups.
 
-# 
+During this lab I successfully:
 
-# \### Configuration
 
-# 
 
-# I reviewed role assignments and inherited permissions.
+\- Validated Azure Policy enforcement
 
-# 
+\- Tested compliance reporting
 
-# \### Evidence
+\- Verified automatic remediation
 
-# 
+\- Confirmed Resource Lock functionality
 
-# !\[Figure 15 - RBAC Owner Role Assignment and Management Group Inheritance](InvalidUrl)
+\- Reviewed RBAC inheritance
 
-# 
+\- Validated Management Group configuration
 
-# \### Validation
+\- Successfully moved resources between Resource Groups
 
-# 
 
-# I reviewed role assignment scope and inheritance details.
 
-# 
+\---
 
-# \### Result
 
-# 
 
-# Permissions assigned at higher scopes were inherited by child resources.
+\## Challenges During the Lab
 
-# 
 
-# \### What I Learned
 
-# 
+A few areas required additional investigation:
 
-# RBAC inheritance simplifies administrative management and helps ensure consistency across environments.
 
-# 
 
-# \---
+\- Understanding the differences between Audit, Deny and Modify policy effects
 
-# 
+\- Learning how Managed Identities support remediation
 
-# \## Step 12 \\- Move Resources Between Resource Groups
+\- Understanding compliance evaluation and remediation processing
 
-# 
+\- Identifying which Azure resources support relocation
 
-# \### Objective
+\- Understanding how Resource Locks interact with RBAC permissions
 
-# 
+\- Understanding how Azure Policy can prevent non-compliant deployments before they occur
 
-# Understand Azure resource relocation capabilities.
 
-# 
 
-# \### Configuration
+Working through these challenges improved my understanding of Azure governance and compliance controls.
 
-# 
 
-# I moved a Network Security Group between Resource Groups.
 
-# 
+\---
 
-# \### Evidence
 
-# 
 
-# !\[Figure 18 - Azure Resource Move Review](InvalidUrl)
+\## Key Takeaways
 
-# 
 
-# !\[Figure 17 - Network Security Group Successfully Moved](InvalidUrl)
 
-# 
+\- Azure Policy can prevent and identify non-compliant resources
 
-# \### Validation
+\- Compliance monitoring is a critical governance capability
 
-# 
+\- Managed Identities support secure remediation
 
-# I reviewed the move operation and confirmed the resource location after completion.
+\- Resource Locks help protect critical infrastructure
 
-# 
+\- Management Groups simplify governance at scale
 
-# \### Result
+\- RBAC inheritance reduces administration overhead
 
-# 
+\- Resource relocation requires planning and validation
 
-# The Network Security Group was successfully relocated.
+\- Governance controls are most effective when applied proactively
 
-# 
 
-# \### What I Learned
 
-# 
+\---
 
-# Azure Resource Manager supports resource movement between Resource Groups when dependency requirements are met.
 
-# 
 
-# \---
+\## Skills Practised
 
-# 
 
-# \# Validation and Testing
 
-# 
+\### Azure Governance
 
-# The following activities were completed throughout the lab:
 
-# 
 
-# \- Verified policy assignment and enforcement
+\- Azure Policy
 
-# \- Tested policy compliance reporting
+\- Policy Compliance Monitoring
 
-# \- Validated automatic remediation functionality
+\- Policy Remediation
 
-# \- Confirmed Resource Lock enforcement
+\- Resource Tag Governance
 
-# \- Reviewed RBAC inheritance
 
-# \- Confirmed Management Group hierarchy configuration
 
-# \- Successfully moved resources between Resource Groups
+\### Security and Access Control
 
-# 
 
-# \---
 
-# 
+\- Azure RBAC
 
-# \# Challenges During the Lab
+\- RBAC Inheritance
 
-# 
+\- Resource Locks
 
-# A few areas required additional investigation:
+\- Management Groups
 
-# 
 
-# \- Understanding the differences between Audit, Deny, and Modify policy effects.
 
-# \- Learning how Managed Identities support policy remediation.
+\### Azure Administration
 
-# \- Understanding how compliance evaluations and remediation tasks are processed.
 
-# \- Identifying which Azure resources can be moved between Resource Groups and any associated limitations.
 
-# \- Understanding the relationship between RBAC permissions and Resource Locks.
-
-# 
-
-# Working through these challenges gave me a much better understanding of how governance controls operate in Azure environments.
-
-# 
-
-# \---
-
-# 
-
-# \# Key Takeaways
-
-# 
-
-# \- Azure Policy can both prevent and identify non\\-compliant resources.
-
-# \- Compliance monitoring is a critical part of governance.
-
-# \- Managed Identities enable secure policy remediation.
-
-# \- Resource Locks help protect critical infrastructure.
-
-# \- Management Groups simplify governance across subscriptions.
-
-# \- RBAC inheritance reduces administrative complexity.
-
-# \- Resource relocation requires validation of dependencies and supported resource types.
-
-# \- Governance controls are most effective when implemented proactively rather than reactively.
-
-# 
-
-# \---
-
-# 
-
-# \# Skills Practised
-
-# 
-
-# \### Azure Governance
-
-# 
-
-# \- Azure Policy
-
-# \- Policy Compliance Monitoring
-
-# \- Policy Remediation
-
-# \- Resource Tag Governance
-
-# 
-
-# \### Security and Access Control
-
-# 
-
-# \- Azure RBAC
-
-# \- RBAC Inheritance
-
-# \- Resource Protection
-
-# \- Management Groups
-
-# 
-
-# \### Azure Administration
-
-# 
-
-# \- Azure Resource Manager
-
-# \- Resource Group Administration
-
-# \- Resource Relocation
-
-# \- Azure PowerShell
-
-# 
-
-# \### Operations
-
-# 
-
-# \- Compliance Validation
-
-# \- Governance Reporting
-
-# \- Resource Lifecycle Management
-
-# 
-
-# \---
-
-# 
-
-# \# AZ\\-104 Skills Mapping
-
-# 
-
-# This lab aligns with the following AZ\\-104 objectives:
-
-# 
-
-# \- Manage Azure subscriptions and governance
-
-# \- Configure and manage Azure Policy
-
-# \- Configure Resource Locks
-
-# \- Configure Azure Management Groups
-
-# \- Configure Role\\-Based Access Control (RBAC)
-
-# \- Manage Resource Groups
-
-# \- Move Azure resources
-
-# \- Monitor and remediate compliance issues
-
-# 
-
-# 
+\- Azure Resource 
 
