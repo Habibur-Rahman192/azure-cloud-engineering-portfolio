@@ -365,6 +365,3 @@ Key achievements included:
 - Validating RBAC inheritance and access controls
 - Successfully relocating Azure resources between Resource Groups
 
-This lab strengthened practical Azure governance skills required for enterprise environments and aligned directly with key objectives of the Microsoft Azure Administrator (AZ-104) certification.
-
----
