@@ -368,16 +368,3 @@ Key achievements included:
 This lab strengthened practical Azure governance skills required for enterprise environments and aligned directly with key objectives of the Microsoft Azure Administrator (AZ-104) certification.
 
 ---
-
-## Certification Alignment
-
-**Certification:** Microsoft Azure Administrator (AZ-104)  
-**Module:** Azure Governance and Resource Management
-
-## Status
-
-✅ Completed
-
----
-
-*Part of the Azure Cloud Engineering Portfolio*
