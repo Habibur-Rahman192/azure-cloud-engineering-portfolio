@@ -299,6 +299,4 @@ Successfully implemented governance controls across an Azure environment using A
 
 The environment achieved full compliance following remediation activities and demonstrated key enterprise governance capabilities, including policy enforcement, automated tagging, access control inheritance, resource protection, and controlled resource relocation.
 
-This lab provided practical experience with core governance and resource management concepts required for the **Microsoft Azure Administrator (AZ-104)** certification.
-
 ---
