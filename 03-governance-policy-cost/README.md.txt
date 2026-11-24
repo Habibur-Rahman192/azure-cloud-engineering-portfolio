@@ -2,10 +2,11 @@
 
 ## Overview
 
-This lab focused on implementing governance, compliance, and resource management controls within Microsoft Azure. The exercises demonstrated how Azure administrators can use Azure Policy, Resource Locks, Management Groups, RBAC, and Azure Resource Manager to govern resources at scale.
+In this lab, I implemented Azure governance and resource management controls across a cloud environment using Azure Policy, Resource Locks, Management Groups, RBAC, and Azure Resource Manager.
 
-The objective was to enforce organizational standards, protect critical resources, automate compliance, and manage access through Azure-native governance capabilities.
+The project focused on enforcing compliance, protecting critical resources, automating governance tasks, and managing access through enterprise-grade Azure governance solutions.
 
+By the end of the lab, I successfully achieved full policy compliance, implemented automated tag remediation, protected network resources with Resource Locks, and centralized governance through Management Groups and RBAC inheritance.
 ---
 
 ## Technologies Used
